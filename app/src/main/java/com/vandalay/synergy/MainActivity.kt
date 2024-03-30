@@ -54,26 +54,19 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     when (ui) {
-                        MainUi.Initial -> Greeting("Android")
                         MainUi.PermissionGranted -> Greeting("Kind Sir!")
+                        MainUi.Initial,
                         is MainUi.RequirePermission -> {
-                            Column {
-                                Text(text = "Please enable the notification listener service")
-                                Button(onClick = { viewModel.onEvent(MainEvent.RequestPermission) }) {
-                                    Text(text = "Enable now")
-                                }
+                            PermissionRequired(PermissionRequiredUIModel.Required) {
+                                viewModel.onEvent(MainEvent.RequestPermission)
                             }
                         }
 
                         MainUi.PermissionDenied -> {
-                            Column {
-                                Greeting("Permission denier :(")
-                                Button(onClick = { viewModel.onEvent(MainEvent.RequestPermission) }) {
-                                    Text(text = "Try again")
-                                }
+                            PermissionRequired(PermissionRequiredUIModel.Denied) {
+                                viewModel.onEvent(MainEvent.RequestPermission)
                             }
                         }
-
                     }
                 }
             }
